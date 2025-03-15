@@ -1,4 +1,4 @@
-use std::ops::{Add, Index, IndexMut};
+use std::ops::{Add, Index, IndexMut, Mul, Sub};
 
 /// 行列を表す構造体
 #[derive(Debug, Clone)]
@@ -103,6 +103,70 @@ where
     }
 }
 
+impl<T> Sub for Matrix<T>
+where
+    T: Sub<Output = T> + Default + Copy,
+{
+    type Output = Matrix<T>;
+
+    /// 2つの行列を減算する
+    ///
+    /// # 引数
+    ///
+    /// * `other` - 減算する行列
+    ///
+    /// # 戻り値
+    ///
+    /// 減算結果の行列
+    ///
+    /// # パニック
+    ///
+    /// 行列のサイズが一致しない場合にパニックする
+    fn sub(self, other: Matrix<T>) -> Matrix<T> {
+        assert!(self.rows == other.rows && self.cols == other.cols);
+        let mut result = Matrix::new(self.rows, self.cols);
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                result[(i, j)] = self[(i, j)] - other[(i, j)];
+            }
+        }
+        result
+    }
+}
+
+impl<T> Mul for Matrix<T>
+where
+    T: Mul<Output = T> + Add<Output = T> + Default + Copy,
+{
+    type Output = Matrix<T>;
+
+    /// 2つの行列を掛け算する
+    ///
+    /// # 引数
+    ///
+    /// * `other` - 掛け算する行列
+    ///
+    /// # 戻り値
+    ///
+    /// 掛け算結果の行列
+    ///
+    /// # パニック
+    ///
+    /// 行列のサイズが適切でない場合にパニックする
+    fn mul(self, other: Matrix<T>) -> Matrix<T> {
+        assert!(self.cols == other.rows);
+        let mut result = Matrix::new(self.rows, other.cols);
+        for i in 0..self.rows {
+            for j in 0..other.cols {
+                for k in 0..self.cols {
+                    result[(i, j)] = result[(i, j)] + (self[(i, k)] * other[(k, j)]);
+                }
+            }
+        }
+        result
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -134,5 +198,25 @@ mod tests {
         assert_eq!(m[(0, 1)], 2.0);
         assert_eq!(m[(1, 0)], 3.0);
         assert_eq!(m[(1, 1)], 4.0);
+    }
+
+    #[test]
+    fn test_matrix_subtraction() {
+        let m1 = Matrix::from_vec(vec![vec![5.0, 6.0], vec![7.0, 8.0]]);
+        let m2 = Matrix::from_vec(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+        let m3 = m1 - m2;
+        assert_eq!(m3[(0, 0)], 4.0);
+        assert_eq!(m3[(1, 1)], 4.0);
+    }
+
+    #[test]
+    fn test_matrix_multiplication() {
+        let m1 = Matrix::from_vec(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+        let m2 = Matrix::from_vec(vec![vec![2.0, 0.0], vec![1.0, 2.0]]);
+        let m3 = m1 * m2;
+        assert_eq!(m3[(0, 0)], 4.0);
+        assert_eq!(m3[(0, 1)], 4.0);
+        assert_eq!(m3[(1, 0)], 10.0);
+        assert_eq!(m3[(1, 1)], 8.0);
     }
 }
