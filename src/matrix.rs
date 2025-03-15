@@ -40,6 +40,27 @@ impl<T: Default + Clone> Matrix<T> {
     }
 }
 
+impl<T: Default + Copy> Matrix<T> {
+    /// 行列を転置する
+    ///
+    /// # 戻り値
+    ///
+    /// 転置された行列
+    pub fn transpose(&self) -> Self {
+        let mut transposed_data = vec![vec![T::default(); self.rows]; self.cols];
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                transposed_data[j][i] = self.data[i][j];
+            }
+        }
+        Matrix {
+            rows: self.cols,
+            cols: self.rows,
+            data: transposed_data,
+        }
+    }
+}
+
 impl<T> Index<(usize, usize)> for Matrix<T> {
     type Output = T;
 
@@ -218,5 +239,15 @@ mod tests {
         assert_eq!(m3[(0, 1)], 4.0);
         assert_eq!(m3[(1, 0)], 10.0);
         assert_eq!(m3[(1, 1)], 8.0);
+    }
+
+    #[test]
+    fn test_matrix_transpose() {
+        let m = Matrix::from_vec(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+        let mt = m.transpose();
+        assert_eq!(mt[(0, 0)], 1.0);
+        assert_eq!(mt[(0, 1)], 3.0);
+        assert_eq!(mt[(1, 0)], 2.0);
+        assert_eq!(mt[(1, 1)], 4.0);
     }
 }
