@@ -51,6 +51,24 @@ impl<T: Default + Clone> Matrix<T> {
         let cols = data[0].len();
         Matrix { rows, cols, data }
     }
+
+    /// 配列から行列を作成する
+    ///
+    /// # 引数
+    ///
+    /// * `data` - 行列のデータ
+    ///
+    /// # 戻り値
+    ///
+    /// 新しい行列
+    pub fn from_array<const R: usize, const C: usize>(data: [[T; C]; R]) -> Self {
+        let data = data.iter().map(|row| row.to_vec()).collect();
+        Matrix {
+            rows: R,
+            cols: C,
+            data,
+        }
+    }
 }
 
 impl<T: Default + Copy> Matrix<T> {
@@ -262,5 +280,15 @@ mod tests {
         assert_eq!(mt[(0, 1)], 3.0);
         assert_eq!(mt[(1, 0)], 2.0);
         assert_eq!(mt[(1, 1)], 4.0);
+    }
+
+    #[test]
+    fn test_matrix_from_array() {
+        let data = [[1.0, 2.0], [3.0, 4.0]];
+        let m = Matrix::from_array(data);
+        assert_eq!(m[(0, 0)], 1.0);
+        assert_eq!(m[(0, 1)], 2.0);
+        assert_eq!(m[(1, 0)], 3.0);
+        assert_eq!(m[(1, 1)], 4.0);
     }
 }
