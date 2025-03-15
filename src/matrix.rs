@@ -24,6 +24,19 @@ impl<T: Default + Clone> Matrix<T> {
         Matrix { rows, cols, data }
     }
 
+    /// 正方行列を作成する
+    ///
+    /// # 引数
+    ///
+    /// * `size` - 行列のサイズ
+    ///
+    /// # 戻り値
+    ///
+    /// 新しい正方行列
+    pub fn new_square(size: usize) -> Self {
+        Self::new(size, size)
+    }
+
     /// ベクタから行列を作成する
     ///
     /// # 引数
