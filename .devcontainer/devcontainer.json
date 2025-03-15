@@ -1,0 +1,12 @@
+{
+    "name": "rustdevcontainer",
+    "dockerFile": "Dockerfile",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "terminal.integrated.shellArgs.linux": []
+            }
+        }
+    }
+  }
