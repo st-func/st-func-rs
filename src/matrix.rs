@@ -2,13 +2,13 @@ use std::ops::{Add, Index, IndexMut};
 
 /// 行列を表す構造体
 #[derive(Debug, Clone)]
-pub struct Matrix {
+pub struct Matrix<T> {
     rows: usize,
     cols: usize,
-    data: Vec<Vec<f64>>,
+    data: Vec<Vec<T>>,
 }
 
-impl Matrix {
+impl<T: Default + Clone> Matrix<T> {
     /// 新しい行列を作成する
     ///
     /// # 引数
@@ -20,7 +20,7 @@ impl Matrix {
     ///
     /// 新しい行列
     pub fn new(rows: usize, cols: usize) -> Self {
-        let data = vec![vec![0.0; cols]; rows];
+        let data = vec![vec![T::default(); cols]; rows];
         Matrix { rows, cols, data }
     }
 
@@ -33,15 +33,15 @@ impl Matrix {
     /// # 戻り値
     ///
     /// 新しい行列
-    pub fn from_vec(data: Vec<Vec<f64>>) -> Self {
+    pub fn from_vec(data: Vec<Vec<T>>) -> Self {
         let rows = data.len();
         let cols = data[0].len();
         Matrix { rows, cols, data }
     }
 }
 
-impl Index<(usize, usize)> for Matrix {
-    type Output = f64;
+impl<T> Index<(usize, usize)> for Matrix<T> {
+    type Output = T;
 
     /// 行列の要素を取得する
     ///
@@ -57,7 +57,7 @@ impl Index<(usize, usize)> for Matrix {
     }
 }
 
-impl IndexMut<(usize, usize)> for Matrix {
+impl<T> IndexMut<(usize, usize)> for Matrix<T> {
     /// 行列の要素を変更する
     ///
     /// # 引数
@@ -72,8 +72,11 @@ impl IndexMut<(usize, usize)> for Matrix {
     }
 }
 
-impl Add for Matrix {
-    type Output = Matrix;
+impl<T> Add for Matrix<T>
+where
+    T: Add<Output = T> + Default + Copy,
+{
+    type Output = Matrix<T>;
 
     /// 2つの行列を加算する
     ///
@@ -88,7 +91,7 @@ impl Add for Matrix {
     /// # パニック
     ///
     /// 行列のサイズが一致しない場合にパニックする
-    fn add(self, other: Matrix) -> Matrix {
+    fn add(self, other: Matrix<T>) -> Matrix<T> {
         assert!(self.rows == other.rows && self.cols == other.cols);
         let mut result = Matrix::new(self.rows, self.cols);
         for i in 0..self.rows {
@@ -106,7 +109,7 @@ mod tests {
 
     #[test]
     fn test_matrix_creation() {
-        let m = Matrix::new(2, 3);
+        let m: Matrix<f64> = Matrix::new(2, 3);
         assert_eq!(m[(0, 0)], 0.0);
         assert_eq!(m[(1, 2)], 0.0);
     }
@@ -122,7 +125,7 @@ mod tests {
 
     #[test]
     fn test_matrix_indexing() {
-        let mut m = Matrix::new(2, 2);
+        let mut m: Matrix<f64> = Matrix::new(2, 2);
         m[(0, 0)] = 1.0;
         m[(0, 1)] = 2.0;
         m[(1, 0)] = 3.0;
