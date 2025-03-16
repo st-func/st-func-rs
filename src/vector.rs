@@ -35,6 +35,15 @@ impl<T: Default + Clone> Vector<T> {
         let size = data.len();
         Vector { size, data }
     }
+
+    /// ベクトルのサイズを返す
+    ///
+    /// # 戻り値
+    ///
+    /// ベクトルのサイズ
+    pub fn len(&self) -> usize {
+        self.size
+    }
 }
 
 impl<T> Index<usize> for Vector<T> {
