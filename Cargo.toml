@@ -1,7 +1,3 @@
-[package]
-name = "st-func-rs"
-version = "0.1.0"
-authors = ["st-func <st_func@outlook.jp>"]
-edition = "2024"
-
-[dependencies]
+[workspace]
+members = ["st_func_core"]
+resolver = "3"
