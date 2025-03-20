@@ -1,12 +1,17 @@
 {
-    "name": "rustdevcontainer",
+    "name": "rust_devcontainer",
     "dockerFile": "Dockerfile",
     "customizations": {
         "vscode": {
             "settings": {
                 "terminal.integrated.shell.linux": "/bin/bash",
                 "terminal.integrated.shellArgs.linux": []
-            }
+            },
+            "extensions": [
+                "rust-lang.rust-analyzer",
+                "vscodevim.vim",
+                "streetsidesoftware.code-spell-checker"
+            ]
         }
     }
 }

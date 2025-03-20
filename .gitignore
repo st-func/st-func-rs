@@ -22,3 +22,6 @@ target/
 
 # Ignore Cargo.lock for library projects
 Cargo.lock
+
+# テスト用の出力ファイル
+test_output/

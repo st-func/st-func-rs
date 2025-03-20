@@ -6,6 +6,12 @@
     "**/lib/rustlib/src/rust/library/**/*.rs": true
   },
   "[rust]": {
-            "editor.defaultFormatter": "rust-lang.rust-analyzer"
-    }
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "cSpell.words": [
+    "ddot",
+    "nigam",
+    "sdof",
+    "vscodevim"
+  ]
 }
